@@ -38,12 +38,15 @@ const listingService = {
       values.push(type);
     }
     if (suburb) {
-      conditions.push(`LOWER(suburb) = LOWER($${i++})`);
-      values.push(suburb);
+      conditions.push(
+        `(LOWER(suburb) LIKE $${i} OR LOWER(address) LIKE $${i})`,
+      );
+      values.push(`%${suburb.toLowerCase()}%`);
+      i++;
     }
     if (keyword) {
       conditions.push(
-        `(LOWER(title) LIKE $${i} OR LOWER(description) LIKE $${i})`,
+        `(LOWER(title) LIKE $${i} OR LOWER(description) LIKE $${i} OR LOWER(address) LIKE $${i} OR LOWER(suburb) LIKE $${i})`,
       );
       values.push(`%${keyword.toLowerCase()}%`);
       i++;
